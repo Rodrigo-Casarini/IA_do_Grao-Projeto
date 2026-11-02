@@ -33,7 +33,8 @@ def analisar_imagem(imagem, sensibilidade="normal"):
         modelo(
             str(caminho),
             conf=confidence_threshold,
-            device=0,
+            device="cpu",
+            # Para voltar a usar a GPU: device=0,
             verbose=False,
         )[0]
         for modelo in models

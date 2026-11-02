@@ -43,4 +43,4 @@ Thumbs.db
 !/treinamento/runs/detect/train-8/
 /treinamento/runs/detect/train-8/weights/
 /treinamento/runs/detect/train-8/weights/*
-!/treinamento/runs/detect/train-8/weights/best.pt
+!/treinamento/runs/detect/train-8/weights/best.ptA
