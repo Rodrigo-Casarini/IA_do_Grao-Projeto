@@ -50,4 +50,4 @@ ultralytics==8.4.143
 ultralytics-platform==0.1.102
 ultralytics-thop==2.2.3
 urllib3==2.8.0
-mysqlclient==2.3.5
+mysqlclient
