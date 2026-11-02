@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-^ql+8r#fmj=@_1ez@x-qrk2)wqlpkjm776a+z!6z*qi&qx594w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['']
+ALLOWED_HOSTS = ["https://ia-do-grao-projeto.onrender.com"]
+render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 
 
 # Application definition
@@ -78,6 +79,7 @@ DATABASES = {
         "NAME": os.environ.get("SQLITE_PATH", BASE_DIR / "db.sqlite3"),
     }
 }
+
 
 # Configuração antiga do MySQL local, mantida como referência:
 # DATABASES = {
