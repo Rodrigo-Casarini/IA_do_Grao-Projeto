@@ -20,6 +20,7 @@ urlpatterns = [
     path('analise-form/', views.analizeForm, name='analizeForm'),
     path('analise/excluir/', views.excluir_analizes, name='excluirAnalizes'),
     path('historico/', views.historico, name='historico'),
+    path('media/<path:caminho>', views.imagem_analise, name='imagem_analise'),
 ]
 
 if settings.DEBUG:

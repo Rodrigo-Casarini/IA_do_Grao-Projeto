@@ -1,9 +1,17 @@
+from datetime import timedelta
+import json
+import mimetypes
+from pathlib import Path
+
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from django.db.models import Avg
+from django.conf import settings
 from django.contrib.auth import login as auth_login
+from django.db.models import Avg, Q
+from django.http import FileResponse, Http404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils import timezone
 
 from .forms import AnalizeForm, CadastroForm
 from .models import Analize
@@ -16,11 +24,6 @@ from .classificacoes import (
     estado_classe,
     rotulo_classe,
 )
-
-from datetime import timedelta
-import json
-from django.utils import timezone
-from django.conf import settings
 
 
 def home(request):
@@ -375,3 +378,33 @@ def historico(request):
         'sensibilidade_choices': Analize.SENSIBILIDADE_CHOICES,
     }
     return render(request, 'core/historico.html', context)
+
+
+@login_required(login_url='login')
+def imagem_analise(request, caminho):
+    analise = get_object_or_404(
+        Analize.objects.filter(usuario=request.user).filter(
+            Q(imagem_grao=caminho)
+            | Q(imagem_grao_2=caminho)
+            | Q(imagem_grao_3=caminho)
+        )
+    )
+    imagem = next(
+        arquivo
+        for arquivo in (
+            analise.imagem_grao,
+            analise.imagem_grao_2,
+            analise.imagem_grao_3,
+        )
+        if arquivo and arquivo.name == caminho
+    )
+    try:
+        arquivo = imagem.open("rb")
+    except FileNotFoundError as exc:
+        raise Http404("A imagem desta análise não está disponível.") from exc
+
+    content_type, _ = mimetypes.guess_type(Path(caminho).name)
+    return FileResponse(
+        arquivo,
+        content_type=content_type or "application/octet-stream",
+    )
