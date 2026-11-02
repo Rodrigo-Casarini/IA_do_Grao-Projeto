@@ -101,7 +101,7 @@ DATABASES["default"].setdefault("OPTIONS", {})["ssl"] = {"ca": AIVEN_CA_CERT}
          "ENGINE": "django.db.backends.mysql",
          "NAME": "ia_do_grao",
          "USER": "root",
-         "PASSWORD": "Admin@801",
+         "PASSWORD": "SENHA_DO_MYSQL",
          "HOST": "127.0.0.1",
          "PORT": "3306",
      }
