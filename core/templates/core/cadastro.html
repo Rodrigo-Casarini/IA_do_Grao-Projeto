@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Criar conta | IA do Grão</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}?v=20261027-cadastro" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="login-page">
+    <main class="login-container">
+      <p class="eyebrow">IA do Grão</p>
+      <h1>Criar conta</h1>
+      <p class="auth-intro">Cadastre seu acesso para começar a analisar grãos.</p>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        {{ form.as_p }}
+        <button class="btn btn-primary" type="submit">Criar conta</button>
+      </form>
+      <a class="auth-switch" href="{% url 'login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">
+        Já tem uma conta? Entrar
+      </a>
+    </main>
+  </body>
+</html>

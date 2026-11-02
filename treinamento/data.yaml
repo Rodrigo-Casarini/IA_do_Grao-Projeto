@@ -1,0 +1,8 @@
+path: C:\Users\Rodrigo\Documents\IA_do_Grao\treinamento
+train: images/train
+val: images/val
+
+nc: 4
+
+names:
+ ['feijao_mofado','feijao_bom','milho_mofado','milho_bom']

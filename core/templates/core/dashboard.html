@@ -1,0 +1,129 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard | IA do Grão{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Painel geral</p>
+        <h1>Dashboard</h1>
+    </div>
+    <a href="{% url 'analizeForm' %}" class="primary-btn">+ Nova análise</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card highlight">
+        <span>Total de análises</span>
+        <strong>{{ total }}</strong>
+        <small style="color: white;">Visão das suas análises</small>
+    </div>
+    <div class="stat-card">
+        <span>Feijão</span>
+        <strong>{{ feijao }}</strong>
+        <small>Registros detectados</small>
+    </div>
+    <div class="stat-card">
+        <span>Milho</span>
+        <strong>{{ milho }}</strong>
+        <small>Registros detectados</small>
+    </div>
+    <div class="stat-card">
+        <span>Aprovados</span>
+        <strong>{{ aprovados }}</strong>
+        <small>No lote atual</small>
+    </div>
+    <div class="stat-card warning">
+        <span>Pendentes</span>
+        <strong>{{ pendentes }}</strong>
+        <small>Precisam revisão</small>
+    </div>
+    <div class="stat-card danger-card">
+        <span>Rejeitados</span>
+        <strong>{{ rejeitados }}</strong>
+        <small>Precisam atenção</small>
+    </div>
+    <div class="stat-card">
+        <span>Mofados encontrados</span>
+        <strong>{{ total_mofados }}</strong>
+        <small>Em todas as imagens</small>
+    </div>
+    <div class="stat-card">
+        <span>Confiança média</span>
+        <strong>{% if confianca_media %}{{ confianca_media|floatformat:0 }}%{% else %}--{% endif %}</strong>
+        <small>Resultado geral da IA</small>
+    </div>
+</div>
+
+<section class="dashboard-alerts" aria-labelledby="alerts-title">
+    <div class="section-heading">
+        <div>
+            <p class="panel-kicker">Atenção</p>
+            <h2 id="alerts-title">Alertas importantes</h2>
+        </div>
+    </div>
+    <div class="alerts-grid">
+        {% if pendentes %}
+            <div class="alert-card alert-warning">
+                <strong>{{ pendentes }} análise{{ pendentes|pluralize }} pendente{{ pendentes|pluralize }}</strong>
+                <span>Precisam ser revisadas.</span>
+            </div>
+        {% endif %}
+        {% if ultima_rejeitada %}
+            <div class="alert-card alert-danger">
+                <strong>Última análise rejeitada</strong>
+                <span>Registro #{{ ultima_rejeitada.id }} precisa de atenção.</span>
+            </div>
+        {% endif %}
+        {% if maior_risco and total_mofados %}
+            <div class="alert-card alert-info">
+                <strong>Maior concentração de mofados</strong>
+                <span>Registro #{{ maior_risco.id }} tem o maior número encontrado.</span>
+            </div>
+        {% endif %}
+        {% if not pendentes and not ultima_rejeitada and not maior_risco %}
+            <div class="alert-card alert-success">
+                <strong>Operação em dia</strong>
+                <span>Nenhuma análise exige atenção agora.</span>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<div class="panel">
+    <div class="panel-header">
+        <h2>Análises recentes</h2>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Mofados</th>
+                    <th>Observação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in recentes %}
+                <tr>
+                    <td>{{ item.get_tipo_grao_display }}</td>
+                    <td>{{ item.data_analise }}</td>
+                    <td><span class="status-badge {{ item.status }}">{{ item.get_status_display }}</span></td>
+                    <td>
+                        {% with detalhe=item.detalhes|first %}
+                            {% if detalhe %}{{ detalhe.mofados|default:0 }}{% else %}--{% endif %}
+                        {% endwith %}
+                    </td>
+                    <td>{{ item.observacao|default:'Sem observações' }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Nenhuma análise cadastrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

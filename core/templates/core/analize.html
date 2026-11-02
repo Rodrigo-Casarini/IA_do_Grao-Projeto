@@ -1,0 +1,98 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Análises | IA do Grão{% endblock %}
+
+{% block content %}
+<div class="analysis-page">
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Gestão</p>
+        <h1>Análises</h1>
+        <p class="page-lead">Registre uma amostra e deixe a IA identificar a qualidade do grão.</p>
+    </div>
+    <a href="{% url 'analizeForm' %}" class="primary-btn">+ Nova análise</a>
+</div>
+
+{% if form %}
+    <div class="panel form-panel">
+        <div class="panel-header">
+            <div>
+                <p class="panel-kicker">Nova amostra</p>
+                <h2>Registrar nova análise</h2>
+            </div>
+            <span class="form-step">01 <small>/ 01</small></span>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="analysis-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+            <div class="field-group form-field field-{{ field.name }} field-{{ forloop.counter }}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="field-help">{{ field.help_text }}</small>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="error-list">{{ field.errors }}</div>
+                {% endif %}
+                {% if field.name == 'imagens' %}
+                    <div id="image-preview-list" class="image-preview-list" aria-live="polite"></div>
+                    <small class="field-help">Você pode enviar até 3 imagens ou capturá-las pela câmera.</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="camera-panel field-group full-width">
+                <div class="camera-panel-header">
+                    <div>
+                        <p class="panel-kicker">Fonte da imagem</p>
+                        <h3>Capturar pela câmera</h3>
+                    </div>
+                    <span class="camera-hint">Imagem nítida = melhor leitura</span>
+                </div>
+
+                <div id="camera-stage" class="camera-stage">
+                    <video id="camera-video" autoplay muted playsinline></video>
+                    <div id="camera-placeholder" class="camera-placeholder">
+                        <span class="camera-placeholder-icon">⌾</span>
+                        <strong>A transmissão aparecerá aqui</strong>
+                        <small>Escolha uma câmera e permita o acesso para enquadrar o grão.</small>
+                    </div>
+                    <span id="live-label" class="live-label" hidden>● AO VIVO</span>
+                </div>
+
+                <div class="camera-controls">
+                    <label class="sr-only" for="camera-select">Câmera disponível</label>
+                    <select id="camera-select" class="input-field">
+                        <option value="">Ative a câmera para listar dispositivos</option>
+                    </select>
+
+                    <button id="activate-camera" class="secondary-btn" type="button">
+                        ◉ Ativar câmera
+                    </button>
+
+                    <button id="capture-frame" class="secondary-btn accent" type="button" disabled>
+                        ⌖ Capturar imagem
+                    </button>
+                </div>
+
+                <small id="capture-count" class="field-help">0 de 3 imagens adicionadas</small>
+
+                <div id="camera-preview-list" class="image-preview-list camera-preview-list" aria-live="polite"></div>
+
+                <p id="camera-alert" class="camera-alert" role="alert" hidden></p>
+            </div>
+
+            <div class="form-actions full-width">
+                <span class="form-note">A imagem será enviada para análise automaticamente.</span>
+                <button type="submit" class="primary-btn" redirect-url="{% url 'historico' %}">Salvar análise</button>
+            </div>
+        </form>
+    </div>
+{% endif %}
+<script src="{% static 'core/js/analize.js' %}?v=20261008-box-colors"></script>
+</div>
+{% endblock %}

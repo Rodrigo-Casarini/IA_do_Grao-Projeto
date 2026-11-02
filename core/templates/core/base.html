@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}IA do Grão{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'core/img/logo.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}?v=20261101-greeting">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand-box">
+                <div class="brand-mark"><img src="{% static 'core/img/logo.png' %}" alt="IA do Grão" style="width: 100%; height: auto; border-radius: 5px;"></div>
+                <div>
+                    <strong>IA do Grão</strong>
+                    <small>Dashboard</small>
+                </div>
+            </div>
+
+            {% if request.user.is_authenticated %}
+                <p class="sidebar-greeting">
+                    <span>Olá,</span>
+                    <strong>{{ request.user.get_short_name|default:request.user.username }}</strong>
+                </p>
+            {% endif %}
+
+            <nav class="sidebar-nav">
+                <a href="{% url 'dashboard' %}" class="nav-item">
+                    <span></span> Dashboard
+                </a>
+                <a href="{% url 'analizeForm' %}" class="nav-item">
+                    <span></span> Nova análise
+                </a>
+                <a href="{% url 'historico' %}" class="nav-item">
+                    <span></span> Histórico
+                </a>
+                <a href="{% url 'home' %}" class="nav-item">
+                    <span></span> Página inicial
+                </a>
+                {% if request.user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}" class="sidebar-logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-item sidebar-logout">
+                            <span></span> Sair
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-item">
+                        <span></span> Entrar
+                    </a>
+                {% endif %}
+            </nav>
+        </aside>
+
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

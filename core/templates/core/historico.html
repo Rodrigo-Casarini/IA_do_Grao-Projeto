@@ -1,0 +1,257 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Histórico | IA do Grão{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Registro</p>
+            <h1>Histórico</h1>
+            <p class="page-lead">Consulte os resultados das análises realizadas e remova registros selecionados.</p>
+        </div>
+        <a href="{% url 'analizeForm' %}" class="primary-btn">+ Nova análise</a>
+    </div>
+
+    <div class="panel analysis-list-panel">
+        <form method="get" class="history-filters">
+            <div class="filter-heading">
+                <div>
+                    <p class="panel-kicker">Pesquisa</p>
+                    <h2>Filtrar histórico</h2>
+                </div>
+                <a href="{% url 'historico' %}" class="clear-filters">Limpar filtros</a>
+            </div>
+            <div class="filter-grid">
+                <label>
+                    Grão
+                    <select name="tipo_grao" class="input-field">
+                        <option value="">Todos</option>
+                        {% for value, label in tipo_choices %}
+                            <option value="{{ value }}" {% if filtros.tipo_grao == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Status
+                    <select name="status" class="input-field">
+                        <option value="">Todos</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if filtros.status == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Sensibilidade
+                    <select name="sensibilidade" class="input-field">
+                        <option value="">Todas</option>
+                        {% for value, label in sensibilidade_choices %}
+                            <option value="{{ value }}" {% if filtros.sensibilidade == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Período
+                    <select name="dias" class="input-field">
+                        <option value="">Todos</option>
+                        <option value="7" {% if filtros.dias == '7' %}selected{% endif %}>Últimos 7 dias</option>
+                        <option value="30" {% if filtros.dias == '30' %}selected{% endif %}>Últimos 30 dias</option>
+                        <option value="90" {% if filtros.dias == '90' %}selected{% endif %}>Últimos 90 dias</option>
+                    </select>
+                </label>
+                <label>
+                    De
+                    <input type="date" name="data_inicio" value="{{ filtros.data_inicio }}" class="input-field">
+                </label>
+                <label>
+                    Até
+                    <input type="date" name="data_fim" value="{{ filtros.data_fim }}" class="input-field">
+                </label>
+                <button type="submit" class="filter-button">Aplicar filtros</button>
+            </div>
+        </form>
+
+        <form method="post" action="{% url 'excluirAnalizes' %}" id="delete-analyses-form">
+            {% csrf_token %}
+            <div class="panel-header analysis-list-header">
+                <div>
+                    <p class="panel-kicker">Acompanhamento</p>
+                    <h2>Todos os registros</h2>
+                </div>
+                <button type="submit" class="delete-btn" id="delete-selected" disabled>
+                    Excluir selecionadas
+                </button>
+            </div>
+
+            <div class="table-wrap">
+                <table class="analysis-table">
+                    <thead>
+                        <tr>
+                            <th class="selection-column">
+                                <label class="checkbox-label" title="Selecionar todas">
+                                    <input type="checkbox" id="select-all-analyses"
+                                        aria-label="Selecionar todas as análises">
+                                    <span></span>
+                                </label>
+                            </th>
+                            <th>ID</th>
+                            <th>Grão</th>
+                            <th>Data</th>
+                            <th>Imagem</th>
+                            <th>Status</th>
+                            <th>Resultado</th>
+                            <th>Observação automática</th>
+                            <th>Observação do usuário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in analizes %}
+                                <tr>
+                                    <td class="selection-column">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="analize_ids" value="{{ item.id }}"
+                                                class="analysis-checkbox" aria-label="Selecionar análise {{ item.id }}">
+                                            <span></span>
+                                        </label>
+                                    </td>
+                                    <td>#{{ item.id }}</td>
+                                    <td>{{ item.get_tipo_grao_display }}</td>
+                                    <td>{{ item.data_analise }}</td>
+                                    <td>
+                                        <div class="history-thumbnails">
+                                        {% for visualizacao in item.imagens_visualizacao %}
+                                            <button type="button" class="image-viewer-trigger"
+                                                data-image-viewer
+                                                data-image-url="{{ visualizacao.url }}"
+                                                data-image-alt="Imagem {{ visualizacao.indice }} da análise {{ item.id }}"
+                                                data-image-boxes="{{ visualizacao.boxes_json }}"
+                                                aria-label="Ampliar imagem {{ visualizacao.indice }} da análise {{ item.id }}">
+                                                <img src="{{ visualizacao.url }}"
+                                                    alt="Imagem {{ visualizacao.indice }} da análise {{ item.id }}"
+                                                    class="mini-thumb">
+                                            </button>
+                                        {% empty %}
+                                            <span>Sem imagem</span>
+                                        {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge {{ item.status }}">{{ item.get_status_display }}</span></td>
+                                    <td>
+                                        {% if item.detalhes %}
+                                            <div class="analysis-results">
+                                                {% for detalhe in item.detalhes %}
+                                                    <div class="image-result-row">
+                                                        <div>
+                                                            <strong>Imagem {{ detalhe.imagem }}</strong>
+                                                            {% for classe in detalhe.classes_resumo %}
+                                                                {% if classe.estado == 'incompativel' %}
+                                                                    <span class="result-warning">{{ classe.quantidade }} × {{ classe.rotulo }} (incompatível)</span>
+                                                                {% elif classe.estado == 'mofado' %}
+                                                                    <span class="result-not-found">{{ classe.quantidade }} × {{ classe.rotulo }}</span>
+                                                                {% else %}
+                                                                    <span class="result-found">{{ classe.quantidade }} × {{ classe.rotulo }}</span>
+                                                                {% endif %}
+                                                            {% empty %}
+                                                                <span class="result-not-found">Nenhum grão encontrado</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                                <button type="button" class="details-button" data-details-target="details-{{ item.id }}">Detalhes</button>
+                                            </div>
+                                        {% elif item.resultado %}
+                                            <div class="analysis-results">
+                                                <div class="image-result-row">
+                                                    <div>
+                                                        <strong>Resultado registrado</strong>
+                                                        <span>{{ item.resultado }}</span>
+                                                    </div>
+                                                    <button type="button" class="details-button" data-details-target="details-{{ item.id }}">Detalhes</button>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            Aguardando análise
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.observacao|default:'Sem observações' }}</td>
+                                    <td>{{ item.observacao_usuario|default:'Sem observações' }}</td>
+                                </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9">Ainda não há registros no histórico.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+        {% for item in analizes %}
+            <div id="details-{{ item.id }}" class="details-modal" hidden role="dialog" aria-modal="true" aria-labelledby="details-title-{{ item.id }}">
+                <div class="details-modal-content">
+                    <div class="details-modal-header">
+                        <div>
+                            <p class="panel-kicker">Análise #{{ item.id }}</p>
+                            <h2 id="details-title-{{ item.id }}">Detalhes por imagem</h2>
+                            <small class="details-sensitivity">Sensibilidade usada: {{ item.get_sensibilidade_display }}</small>
+                        </div>
+                        <button type="button" class="details-close" data-details-close aria-label="Fechar detalhes">Fechar</button>
+                    </div>
+                    {% if item.detalhes %}
+                        {% for detalhe in item.detalhes %}
+                            <section class="details-image-section">
+                                <h3>Imagem {{ detalhe.imagem }}</h3>
+                                <table class="details-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo</th>
+                                            <th>Porcentagem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for deteccao in detalhe.deteccoes %}
+                                            <tr>
+                                                <td>
+                                                    {{ deteccao.classe_exibicao|default:deteccao.classe }}
+                                                    {% if not deteccao.compativel_tipo_grao %}
+                                                        <small class="result-warning">Incompatível com o grão selecionado</small>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ deteccao.percentual|floatformat:2 }}%</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="2" class="result-not-found">Nenhum grão encontrado.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </section>
+                        {% endfor %}
+                    {% else %}
+                        <p>Não há detalhes estruturados para este registro.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div id="image-viewer" class="image-viewer-modal" hidden role="dialog" aria-modal="true" aria-labelledby="image-viewer-title">
+            <div class="image-viewer-content">
+                <div class="image-viewer-header">
+                    <h2 id="image-viewer-title">Imagem analisada</h2>
+                    <button type="button" class="details-close" data-image-viewer-close aria-label="Fechar imagem ampliada">Fechar</button>
+                </div>
+                <div class="image-viewer-stage">
+                    <img id="image-viewer-photo" alt="">
+                    <svg id="image-viewer-boxes" aria-hidden="true"></svg>
+                </div>
+                <p class="image-viewer-legend">
+                    <span class="legend-mold"></span>Grão mofado
+                    <span class="legend-healthy"></span>Grão bom
+                    <span class="legend-incompatible"></span>Tipo divergente
+                </p>
+            </div>
+        </div>
+    </div>
+<script src="{% static 'core/js/analize.js' %}?v=20261008-box-colors"></script>
+{% endblock %}

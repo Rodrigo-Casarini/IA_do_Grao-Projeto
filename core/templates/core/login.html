@@ -1,0 +1,28 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}?v=20261027-cadastro" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="login-page">
+    <div class="login-container">
+      <h2>Login</h2>
+      <form method="post">
+        {% csrf_token %} {{ form.as_p }}
+        <button class="btn btn-primary" type="submit">Entrar</button>
+      </form>
+      <a class="auth-switch" href="{% url 'cadastro' %}{% if next %}?next={{ next|urlencode }}{% endif %}">
+        Criar uma conta
+      </a>
+    </div>
+  </body>
+</html>

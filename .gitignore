@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.log
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+
+# Arquivos locais e dados enviados por usuários
+db.sqlite3
+*.sqlite3
+/media/
+
+# Arquivos temporários do sistema
+.DS_Store
+Thumbs.db
+
+# Dados usados para treinar o modelo
+/treinamento/images/
+/treinamento/labels/
+
+# Resultados gerados pelos treinos: ignorar tudo por padrão,
+/treinamento/runs/
+!/treinamento/runs/
+/treinamento/runs/*
+!/treinamento/runs/detect/
+/treinamento/runs/detect/*
+!/treinamento/runs/detect/train-3/
+/treinamento/runs/detect/train-3/weights/
+/treinamento/runs/detect/train-3/weights/*
+!/treinamento/runs/detect/train-3/weights/best.pt
+!/treinamento/runs/detect/train-6/
+/treinamento/runs/detect/train-6/weights/
+/treinamento/runs/detect/train-6/weights/*
+!/treinamento/runs/detect/train-6/weights/best.pt
+!/treinamento/runs/detect/train-8/
+/treinamento/runs/detect/train-8/weights/
+/treinamento/runs/detect/train-8/weights/*
+!/treinamento/runs/detect/train-8/weights/best.pt

@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA do Grão | Inteligência para o agronegócio</title>
+    <meta name="description" content="Plataforma inteligente para análise de grãos com IA, automação e visão computacional para o setor agrícola.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}?v=20261027-auth">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-wrap">
+            <div class="brand">
+                <div class="brand-mark">IA</div>
+                <div class="brand-text">
+                    <span class="brand-name">IA do Grão</span>
+                    <small>AgriVision</small>
+                </div>
+            </div>
+
+            <nav class="main-nav" aria-label="Menu principal">
+                <a href="#solucao">Solução</a>
+                <a href="#beneficios">Benefícios</a>
+                <a href="#processo">Como funciona</a>
+                <a href="#contato">Contato</a>
+            </nav>
+
+            <div class="nav-actions">
+                {% if request.user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}" class="nav-logout-form">
+                        {% csrf_token %}
+                        <button class="btn btn-ghost" type="submit">Sair</button>
+                    </form>
+                    <a class="btn btn-primary" href="{% url 'dashboard' %}">Dashboard</a>
+                {% else %}
+                    <a class="btn btn-ghost" href="{% url 'login' %}">Entrar</a>
+                    <a class="btn btn-primary" href="{% url 'analize' %}">Testar agora</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <span class="eyebrow">Tecnologia para a próxima safra</span>
+                    <h1>Detecção inteligente de qualidade e sanidade do grão.</h1>
+                    <p>
+                        A IA do Grão combina visão computacional e análise automatizada para identificar defeitos,
+                        classificar lotes e reduzir perdas com precisão em tempo real.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="btn btn-primary" href="{% url 'analize' %}">Analisar agora</a>
+                        <a class="btn btn-secondary" href="#solucao">Conhecer solução</a>
+                    </div>
+
+                    <ul class="hero-points">
+                        <li>Precisão acima de 95%</li>
+                        <li>Diagnóstico em segundos</li>
+                        <li>Suporte para feijão e milho</li>
+                    </ul>
+                </div>
+
+                <div class="hero-visual" aria-label="Visualização da solução">
+                    <div class="dashboard-card">
+                        <div class="status-top">
+                            <span>Monitoramento em tempo real</span>
+                            <span class="pill success">Online</span>
+                        </div>
+                        <div class="scan-area">
+                            <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=900&q=80" alt="Grãos em análise">
+                            <div class="scan-overlay"></div>
+                        </div>
+                        <div class="metrics">
+                            <div>
+                                <strong>96,4%</strong>
+                                <span>acurácia</span>
+                            </div>
+                            <div>
+                                <strong>12s</strong>
+                                <span>análise</span>
+                            </div>
+                            <div>
+                                <strong>3.8k</strong>
+                                <span>amostras</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="partners">
+            <div class="container partners-grid">
+                <span>Empresas e cooperativas que apostam em qualidade</span>
+                <div class="logo-row">
+                    <span>AgriLab</span>
+                    <span>CoopNorte</span>
+                    <span>GrãoPlus</span>
+                    <span>Fazenda IA</span>
+                    <span>SeedFlow</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="solucao" class="section">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Solução completa</span>
+                    <h2>Uma plataforma pensada para quem vive da qualidade do grão.</h2>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <div class="icon-box green">01</div>
+                        <h3>Classificação automática</h3>
+                        <p>Identifica tipos, defeitos, maturação e irregularidades com visão computacional.</p>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="icon-box amber">02</div>
+                        <h3>Detecção de infestação</h3>
+                        <p>Reconhece sinais de mofo, manchas e comprometimento visual do lote em segundos.</p>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="icon-box blue">03</div>
+                        <h3>Relatórios prontos</h3>
+                        <p>Gera dados claros para tomada de decisão, rastreabilidade e controle de qualidade.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="beneficios" class="section section-alt">
+            <div class="container benefits-layout">
+                <div class="benefits-copy">
+                    <span class="eyebrow">Por que escolher a IA do Grão</span>
+                    <h2>Mais produtividade, menos desperdício e decisões mais certeiras.</h2>
+                    <p>
+                        A análise manual é lenta e sujeita a erros. Com inteligência artificial você reduz retrabalho,
+                        acelera processos e eleva a padronização da qualidade do produto final.
+                    </p>
+                    <ul class="check-list">
+                        <li>Redução de perdas em armazenamento e processamento</li>
+                        <li>Padronização de qualidade por lote</li>
+                        <li>Atendimento a padrões de mercado e exportação</li>
+                        <li>Integração simples com processos de produção</li>
+                    </ul>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stat-box">
+                        <strong>40%</strong>
+                        <span>menos rejeição</span>
+                    </div>
+                    <div class="stat-box">
+                        <strong>3x</strong>
+                        <span>mais agilidade</span>
+                    </div>
+                    <div class="stat-box">
+                        <strong>24/7</strong>
+                        <span>monitoramento</span>
+                    </div>
+                    <div class="stat-box highlight">
+                        <strong>100%</strong>
+                        <span>foco em qualidade</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="processo" class="section">
+            <div class="container">
+                <div class="section-heading center">
+                    <span class="eyebrow">Como funciona</span>
+                    <h2>Do upload da imagem à decisão de qualidade em poucos passos.</h2>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <span class="step-number">1</span>
+                        <h3>Carregue a imagem</h3>
+                        <p>Envie fotos do lote ou amostra diretamente na plataforma.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">2</span>
+                        <h3>IA analisa visualmente</h3>
+                        <p>O sistema identifica defeitos e classifica o material com inteligência artificial.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-number">3</span>
+                        <h3>Receba o diagnóstico</h3>
+                        <p>Veja o resultado em relatórios claros para decidir por lote, venda ou processamento.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section cta-band" id="contato">
+            <div class="container cta-box">
+                <div>
+                    <span class="eyebrow">Pronto para evoluir a sua operação?</span>
+                    <h2>Transforme a qualidade do seu grão em vantagem competitiva.</h2>
+                </div>
+                <a class="btn btn-primary" href="login">Explore nossa IA</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-wrap">
+            <div>
+                <div class="brand footer-brand">
+                    <div class="brand-mark">IA</div>
+                    <div class="brand-text">
+                        <span class="brand-name">IA do Grão</span>
+                    </div>
+                </div>
+            </div>
+            <p>© 2026 IA do Grão. Inteligência para a cadeia agrícola.</p>
+            <a href="#top">Voltar ao topo</a>
+        </div>
+    </footer>
+</body>
+</html>
