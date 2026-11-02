@@ -13,9 +13,6 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 import os
 from pathlib import Path
 
-import dj_database_url
-from django.core.exceptions import ImproperlyConfigured
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -75,37 +72,24 @@ WSGI_APPLICATION = 'IA_DO_GRAO.wsgi.application'
 
 
 # Database
-# Configure DATABASE_URL and AIVEN_CA_CERT as environment variables.
-DATABASE_URL = os.environ.get("DATABASE_URL")
-AIVEN_CA_CERT = os.environ.get("AIVEN_CA_CERT")
-
-if not DATABASE_URL:
-    raise ImproperlyConfigured("Defina a variável de ambiente DATABASE_URL.")
-if not AIVEN_CA_CERT:
-    raise ImproperlyConfigured(
-        "Defina AIVEN_CA_CERT com o caminho do certificado CA do Aiven."
-    )
-
 DATABASES = {
-    "default": dj_database_url.parse(
-        DATABASE_URL,
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.environ.get("SQLITE_PATH", BASE_DIR / "db.sqlite3"),
+    }
 }
-DATABASES["default"].setdefault("OPTIONS", {})["ssl"] = {"ca": AIVEN_CA_CERT}
 
-
-''' DATABASES = {#My sql do pc/local
-     "default": {
-         "ENGINE": "django.db.backends.mysql",
-         "NAME": "ia_do_grao",
-         "USER": "root",
-         "PASSWORD": "SENHA_DO_MYSQL",
-         "HOST": "127.0.0.1",
-         "PORT": "3306",
-     }
- }'''
+# Configuração antiga do MySQL local, mantida como referência:
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": "ia_do_grao",
+#         "USER": "root",
+#         "PASSWORD": "SENHA_DO_MYSQL",
+#         "HOST": "127.0.0.1",
+#         "PORT": "3306",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
