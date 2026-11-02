@@ -17,6 +17,7 @@ env/
 db.sqlite3
 *.sqlite3
 /media/
+/staticfiles/
 
 # Arquivos temporários do sistema
 .DS_Store
@@ -33,14 +34,14 @@ Thumbs.db
 !/treinamento/runs/detect/
 /treinamento/runs/detect/*
 !/treinamento/runs/detect/train-3/
-/treinamento/runs/detect/train-3/weights/
+!/treinamento/runs/detect/train-3/weights/
 /treinamento/runs/detect/train-3/weights/*
 !/treinamento/runs/detect/train-3/weights/best.pt
 !/treinamento/runs/detect/train-6/
-/treinamento/runs/detect/train-6/weights/
+!/treinamento/runs/detect/train-6/weights/
 /treinamento/runs/detect/train-6/weights/*
 !/treinamento/runs/detect/train-6/weights/best.pt
 !/treinamento/runs/detect/train-8/
-/treinamento/runs/detect/train-8/weights/
+!/treinamento/runs/detect/train-8/weights/
 /treinamento/runs/detect/train-8/weights/*
-!/treinamento/runs/detect/train-8/weights/best.ptA
+!/treinamento/runs/detect/train-8/weights/best.pt
