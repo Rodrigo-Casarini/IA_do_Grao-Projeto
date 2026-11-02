@@ -18,7 +18,6 @@ kiwisolver==1.5.1
 MarkupSafe==3.0.4
 matplotlib==3.11.2
 mpmath==1.3.0
-mysqlclient==2.2.8
 networkx==3.7
 numpy==2.5.4
 nvidia-ml-py==13.615.71
@@ -41,7 +40,7 @@ sympy==1.14.0
 --extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.14.0+cpu
 torchvision==0.29.0+cpu
-# Para voltar a usar CUDA, use o índice cu126 e as versões correspondentes:
+# Para voltar a usar CUDA
 # --extra-index-url https://download.pytorch.org/whl/cu126
 # torch==2.14.0+cu126
 # torchvision==0.29.0+cu126
@@ -51,4 +50,4 @@ ultralytics==8.4.143
 ultralytics-platform==0.1.102
 ultralytics-thop==2.2.3
 urllib3==2.8.0
-dj-database-url==2.0.0
+mysqlclient==2.3.5
